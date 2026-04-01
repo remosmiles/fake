@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posteingang - Webmail</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 40px 20px; 
+            display: flex;
+            justify-content: center;
+        }
+        .inbox-container { 
+            width: 100%; 
+            max-width: 900px; 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            overflow: hidden; 
+        }
+        .header { 
+            background: #0060ba; /* Neutrales Blau, erinnert an klassische Mailer */
+            color: white; 
+            padding: 20px; 
+            font-size: 1.4em; 
+            font-weight: bold; 
+        }
+        .email-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        .email-item { 
+            display: flex; 
+            padding: 15px 20px; 
+            border-bottom: 1px solid #e1e4e8; 
+            align-items: center; 
+            background-color: #f3f8ff; /* Leicht farbig für "ungelesene" Mails */
+        }
+        .email-item:hover { 
+            background-color: #eaf2fa; 
+        }
+        .sender { 
+            font-weight: bold; 
+            width: 220px; 
+            position: relative; 
+            cursor: pointer; 
+            color: #1a1a1a; 
+        }
+        .subject { 
+            flex-grow: 1; 
+            color: #0052cc; 
+            font-weight: 500;
+        }
+        .date { 
+            color: #666; 
+            font-size: 0.9em; 
+            white-space: nowrap;
+        }
+
+        /* --- Der Hover-Effekt (Tooltip) --- */
+        .sender .tooltiptext {
+            visibility: hidden;
+            width: max-content;
+            background-color: #fff;
+            color: #333;
+            text-align: left;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10;
+            top: 130%; 
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+        /* Kleiner Pfeil über dem Kasten */
+        .sender .tooltiptext::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 20px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent #fff transparent;
+        }
+        .sender .tooltiptext::before {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 19px;
+            border-width: 7px;
+            border-style: solid;
+            border-color: transparent transparent #ccc transparent;
+        }
+        /* Kasten beim Drüberfahren anzeigen */
+        .sender:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="inbox-container">
+        <div class="header">Posteingang</div>
+        <ul class="email-list">
+            <li class="email-item">
+                <div class="sender">
+                    Zalando Schweiz
+                    <span class="tooltiptext">&lt;zxy@yahoo.net&gt;</span>
+                </div>
+                <div class="subject">Aktion erforderlich: Bitte bestätigen Sie Ihre Lieferung</div>
+                <div class="date">06:45</div>
+            </li>
+            
+            <li class="email-item" style="background-color: white;">
+                <div class="sender">SBB CFF FFS</div>
+                <div class="subject">Ihr SwissPass Newsletter ist da</div>
+                <div class="date">Gestern</div>
+            </li>
+        </ul>
+    </div>
+
+</body>
+</html>
