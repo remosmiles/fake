@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posteingang - NovaMail</title>
+    <title>Posteingang - FuxMail</title>
     <style>
         :root {
-            --primary: #4F46E5; /* Modernes Indigo */
+            --primary: #4F46E5;
             --primary-hover: #4338CA;
             --bg-color: #F3F4F6;
             --sidebar-bg: #FFFFFF;
@@ -17,14 +17,12 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
         body { background-color: var(--bg-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
         /* Obere Navigationsleiste */
         .topbar { background-color: var(--sidebar-bg); height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid var(--border-color); }
         .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
         .search-bar { background-color: var(--bg-color); width: 50%; max-width: 600px; padding: 10px 16px; border-radius: 8px; border: 1px solid transparent; color: var(--text-main); font-size: 0.95rem; }
-        .search-bar:focus { outline: none; border-color: var(--primary); background-color: #fff; }
         .profile-icon { width: 36px; height: 36px; background-color: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
         /* Hauptbereich Layout */
@@ -32,17 +30,16 @@
 
         /* Seitenleiste */
         .sidebar { width: 260px; background-color: var(--sidebar-bg); border-right: 1px solid var(--border-color); padding: 20px 12px; display: flex; flex-direction: column; gap: 8px; }
-        .btn-compose { background-color: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-size: 1rem; font-weight: 500; cursor: pointer; margin-bottom: 16px; text-align: left; display: flex; align-items: center; gap: 10px; transition: background 0.2s; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2); }
-        .btn-compose:hover { background-color: var(--primary-hover); }
+        .btn-compose { background-color: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-size: 1rem; font-weight: 500; cursor: pointer; margin-bottom: 16px; text-align: left; display: flex; align-items: center; gap: 10px; }
         .nav-item { padding: 10px 16px; border-radius: 8px; color: var(--text-main); text-decoration: none; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; cursor: pointer; }
-        .nav-item:hover { background-color: var(--bg-color); }
         .nav-item.active { background-color: #EEF2FF; color: var(--primary); font-weight: 600; }
         .badge { background-color: var(--primary); color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; }
 
-        /* E-Mail Liste */
-        .email-container { flex: 1; display: flex; flex-direction: column; background-color: white; margin: 16px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-color); }
-        .toolbar { padding: 12px 24px; border-bottom: 1px solid var(--border-color); display: flex; gap: 16px; color: var(--text-muted); font-size: 0.9rem; background: #fff; }
+        /* Container für Posteingang & E-Mail-Ansicht */
+        .content-area { flex: 1; display: flex; flex-direction: column; background-color: white; margin: 16px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-color); }
+        .toolbar { padding: 12px 24px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 16px; color: var(--text-muted); font-size: 0.9rem; background: #fff; }
         
+        /* Posteingang Liste */
         .email-list { flex: 1; overflow-y: auto; }
         .email-row { display: flex; align-items: center; padding: 12px 24px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.1s; }
         .email-row:hover { box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15); z-index: 2; position: relative; border-bottom-color: transparent; }
@@ -51,52 +48,39 @@
 
         .checkbox { margin-right: 16px; width: 18px; height: 18px; border: 2px solid var(--text-muted); border-radius: 4px; }
         
-        /* Der Absender mit Hover-Logik */
         .sender-col { width: 220px; min-width: 220px; margin-right: 16px; position: relative; display: flex; align-items: center; }
         .sender-name { position: relative; display: inline-block; padding: 2px 0; }
-        
         .subject-col { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 16px; }
         .subject-col span.preview { color: var(--text-muted); font-weight: 400; margin-left: 8px; }
         .date-col { width: 80px; text-align: right; font-size: 0.85rem; }
 
-        /* --- Tooltip CSS (Der Hover-Effekt für das Video) --- */
-        .tooltiptext {
-            visibility: hidden;
-            width: max-content;
-            background-color: #1F2937; /* Dunkler, professioneller Hintergrund */
-            color: #F9FAFB;
-            text-align: left;
-            border-radius: 6px;
-            padding: 8px 14px;
-            position: absolute;
-            z-index: 50;
-            top: 140%; 
-            left: 0;
-            opacity: 0;
-            transform: translateY(5px);
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            font-weight: 400;
-            font-size: 0.85rem;
-            letter-spacing: 0.3px;
-        }
-        /* Kleiner Pfeil nach oben */
-        .tooltiptext::after {
-            content: "";
-            position: absolute;
-            bottom: 100%;
-            left: 20px;
-            border-width: 6px;
-            border-style: solid;
-            border-color: transparent transparent #1F2937 transparent;
-        }
+        /* Tooltip Hover-Effekt */
+        .tooltiptext { visibility: hidden; width: max-content; background-color: #1F2937; color: #F9FAFB; text-align: left; border-radius: 6px; padding: 8px 14px; position: absolute; z-index: 50; top: 140%; left: 0; opacity: 0; transform: translateY(5px); transition: opacity 0.2s ease, transform 0.2s ease; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); font-weight: 400; font-size: 0.85rem; }
+        .tooltiptext::after { content: ""; position: absolute; bottom: 100%; left: 20px; border-width: 6px; border-style: solid; border-color: transparent transparent #1F2937 transparent; }
+        .sender-name:hover .tooltiptext { visibility: visible; opacity: 1; transform: translateY(0); }
+
+        /* E-Mail Ansicht (Geöffnete E-Mail) */
+        #email-view { display: none; flex-direction: column; height: 100%; }
+        .btn-back { cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; color: var(--text-main); }
+        .btn-back:hover { color: var(--primary); }
         
-        /* Auslöser für den Hover */
-        .sender-name:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .email-header { padding: 24px; border-bottom: 1px solid var(--border-color); }
+        .email-subject { font-size: 1.5rem; font-weight: 600; margin-bottom: 16px; color: var(--text-main); }
+        .email-meta { display: flex; justify-content: space-between; align-items: center; }
+        .email-sender-info { display: flex; align-items: center; gap: 12px; }
+        .sender-avatar { width: 40px; height: 40px; background-color: #ff6900; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; }
+        .sender-details strong { display: block; color: var(--text-main); font-size: 0.95rem; }
+        .sender-details span { color: var(--text-muted); font-size: 0.85rem; }
+        
+        /* Der eigentliche Phishing-Inhalt */
+        .email-body { padding: 32px 24px; flex: 1; overflow-y: auto; background-color: #fff; }
+        .fake-mail-content { max-width: 600px; margin: 0 auto; border: 1px solid #e5e5e5; border-radius: 8px; padding: 30px; font-family: Arial, sans-serif; color: #333; }
+        .fake-logo { font-size: 24px; font-weight: bold; color: #ff6900; margin-bottom: 20px; text-transform: lowercase; letter-spacing: -1px; }
+        .fake-alert { background-color: #fff3cd; color: #856404; padding: 10px 15px; border-left: 4px solid #ffeeba; margin-bottom: 20px; font-weight: bold; font-size: 0.9rem; }
+        .fake-mail-content p { margin-bottom: 15px; line-height: 1.5; }
+        .fake-button { display: block; text-align: center; background-color: #111; color: #fff; text-decoration: none; padding: 14px 20px; font-weight: bold; border-radius: 4px; margin: 25px 0; }
+        .fake-button:hover { background-color: #333; }
+        .fake-footer { font-size: 0.8rem; color: #999; border-top: 1px solid #eee; padding-top: 15px; margin-top: 30px; }
 
     </style>
 </head>
@@ -105,41 +89,27 @@
     <header class="topbar">
         <div class="logo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            NovaMail
+            FuxMail
         </div>
         <input type="text" class="search-bar" placeholder="In E-Mails suchen...">
         <div class="profile-icon">M</div>
     </header>
 
     <div class="main-layout">
-        
         <aside class="sidebar">
-            <button class="btn-compose">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Neue Nachricht
-            </button>
-            <div class="nav-item active">
-                <span>Posteingang</span>
-                <span class="badge">2</span>
-            </div>
+            <button class="btn-compose">Neue Nachricht</button>
+            <div class="nav-item active"><span>Posteingang</span><span class="badge">1</span></div>
             <div class="nav-item"><span>Gesendet</span></div>
-            <div class="nav-item"><span>Entwürfe</span></div>
             <div class="nav-item"><span>Papierkorb</span></div>
-            <div style="margin-top: 20px; padding: 0 16px; font-size: 0.75rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase;">Ordner</div>
-            <div class="nav-item"><span>Rechnungen</span></div>
-            <div class="nav-item"><span>Newsletter</span></div>
         </aside>
 
-        <main class="email-container">
+        <main class="content-area" id="inbox-view">
             <div class="toolbar">
-                <div class="checkbox" style="border-color: #cbd5e1;"></div>
+                <div class="checkbox"></div>
                 <span>↻ Aktualisieren</span>
-                <span>Mehr ▾</span>
             </div>
-            
             <div class="email-list">
-                
-                <div class="email-row unread">
+                <div class="email-row unread" onclick="openEmail()">
                     <div class="checkbox"></div>
                     <div class="sender-col">
                         <span class="sender-name">
@@ -148,55 +118,85 @@
                         </span>
                     </div>
                     <div class="subject-col">
-                        Aktion erforderlich: Bitte bestätigen Sie Ihre Lieferung
-                        <span class="preview">- Hallo, wir haben versucht Ihr Paket zuzustellen...</span>
+                        Letzte Warnung: Aktion erforderlich für Ihre Lieferung
+                        <span class="preview">- Hallo, Ihr Paket liegt im Verteilzentrum...</span>
                     </div>
                     <div class="date-col">06:45</div>
-                </div>
-
-                <div class="email-row unread">
-                    <div class="checkbox"></div>
-                    <div class="sender-col">Digitec Galaxus AG</div>
-                    <div class="subject-col">
-                        Deine Bestellung ist auf dem Weg! 📦
-                        <span class="preview">- Gute Nachrichten! Deine Artikel wurden soeben verpackt...</span>
-                    </div>
-                    <div class="date-col">Gestern</div>
                 </div>
 
                 <div class="email-row read">
                     <div class="checkbox"></div>
                     <div class="sender-col">Die Schweizerische Post</div>
-                    <div class="subject-col">
-                        Ihre Sendung 99.34.123456.12345678
-                        <span class="preview">- Die Sendung wurde erfolgreich im Ablagefach deponiert...</span>
-                    </div>
+                    <div class="subject-col">Ihre Sendung 99.34.123456 <span class="preview">- Die Sendung wurde deponiert...</span></div>
                     <div class="date-col">29. März</div>
                 </div>
+            </div>
+        </main>
 
-                <div class="email-row read">
-                    <div class="checkbox"></div>
-                    <div class="sender-col">Swisscom Rechnung</div>
-                    <div class="subject-col">
-                        Ihre neue Swisscom Rechnung ist da
-                        <span class="preview">- Freundliche Erinnerung: Ihre Rechnung für den Monat März...</span>
-                    </div>
-                    <div class="date-col">25. März</div>
+        <main class="content-area" id="email-view">
+            <div class="toolbar">
+                <div class="btn-back" onclick="closeEmail()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    Zurück zum Posteingang
                 </div>
-
-                 <div class="email-row read">
-                    <div class="checkbox"></div>
-                    <div class="sender-col">SBB CFF FFS</div>
-                    <div class="subject-col">
-                        Ihr SwissPass Newsletter: Frühlingsangebote
-                        <span class="preview">- Entdecken Sie die Schweiz mit unseren neuen Sparbilletten...</span>
+                <span style="margin-left: 20px;">🗑️ Löschen</span>
+                <span>⚠️ Spam melden</span>
+            </div>
+            
+            <div class="email-header">
+                <div class="email-subject">Letzte Warnung: Aktion erforderlich für Ihre Lieferung</div>
+                <div class="email-meta">
+                    <div class="email-sender-info">
+                        <div class="sender-avatar">Z</div>
+                        <div class="sender-details">
+                            <strong>Zalando Schweiz <span style="font-weight: normal; color: var(--text-muted);">&lt;zxy@yahoo.net&gt;</span></strong>
+                            <span>An: mich</span>
+                        </div>
                     </div>
-                    <div class="date-col">21. März</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Heute, 06:45 Uhr</div>
                 </div>
+            </div>
 
+            <div class="email-body">
+                <div class="fake-mail-content">
+                    <div class="fake-logo">zalando</div>
+                    
+                    <div class="fake-alert">
+                        WICHTIG: Ihr Paket wurde blockiert.
+                    </div>
+                    
+                    <p>Guten Tag,</p>
+                    <p>wir haben versucht, Ihr Paket heute zuzustellen. Leider wurde die Sendung in unserem Verteilzentrum gestoppt, da eine kleine, unbezahlte Zoll- und Bearbeitungsgebühr in Höhe von <strong>2,90 CHF</strong> ausstehend ist.</p>
+                    
+                    <p style="color: #d9534f; font-weight: bold;">
+                        Achtung: Wenn Sie diese Gebühr nicht innerhalb der nächsten 12 Stunden begleichen, wird das Paket unwiderruflich an den Absender retourniert. In diesem Fall stellen wir Ihnen Stornierungs- und Lagerkosten in Höhe von 45,00 CHF in Rechnung.
+                    </p>
+                    
+                    <p>Bitte klicken Sie auf den untenstehenden Link, um die Gebühr per Kreditkarte oder Twint zu bezahlen und die Lieferung sofort freizugeben:</p>
+                    
+                    <a href="#" class="fake-button" onclick="event.preventDefault(); alert('Dies ist ein Fake-Link! Er würde jetzt zur Betrügerseite führen.');">Lieferung jetzt freigeben</a>
+                    
+                    <p>Vielen Dank für Ihr Verständnis.<br>Ihr Customer Care Team</p>
+                    
+                    <div class="fake-footer">
+                        Dies ist eine automatisch generierte E-Mail. Bitte antworten Sie nicht auf diese Nachricht. © 2026 Zalando SE.
+                    </div>
+                </div>
             </div>
         </main>
     </div>
+
+    <script>
+        function openEmail() {
+            document.getElementById('inbox-view').style.display = 'none';
+            document.getElementById('email-view').style.display = 'flex';
+        }
+
+        function closeEmail() {
+            document.getElementById('email-view').style.display = 'none';
+            document.getElementById('inbox-view').style.display = 'flex';
+        }
+    </script>
 
 </body>
 </html>
